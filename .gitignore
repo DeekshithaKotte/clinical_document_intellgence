@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environment
+.venv/
+venv/
+ENV/
+
+# Environment variables
+.env
+
+# Editor / IDE
+.vscode/
+.idea/
+
+# Node / UI
+node_modules/
+dist/
+build/
+
+# Data / Vector store
+data/vector_store/
+*.db
+
+# OS files
+.DS_Store
+Thumbs.db
