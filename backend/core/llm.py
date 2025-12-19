@@ -1,19 +1,31 @@
-from openai import OpenAI
-from backend.config import OPENAI_API_KEY
-import httpx
+import os
+import requests
 
-# force no proxies anywhere
-http_client = httpx.Client(proxies=None)
+OLLAMA_URL = os.getenv("OLLAMA_URL", "http://localhost:11434")
+OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "gemma:2b")
 
-client = OpenAI(
-    api_key=OPENAI_API_KEY,
-    http_client=http_client
-)
+def llm_chat(prompt: str) -> str:
+    payload = {
+        "model": OLLAMA_MODEL,
+        "prompt": prompt,
+        "stream": False,
+        "options": {
+            "num_predict": 120,
+            "temperature": 0.2,
+            "stop": ["\n\n", "###"]
+        }
+    }
 
-def llm_chat(prompt: str):
-    response = client.chat.completions.create(
-        model="gpt-4.1-mini",
-        messages=[{"role": "user", "content": prompt}],
-        temperature=0.2
-    )
-    return response.choices[0].message.content
+    try:
+        r = requests.post(
+            f"{OLLAMA_URL}/api/generate",
+            json=payload,
+            timeout=40
+        )
+        r.raise_for_status()
+        return r.json().get("response", "").strip()
+
+    except requests.Timeout:
+        return "LLM Error: request timed out"
+    except requests.RequestException as e:
+        return f"LLM Error: {e}"

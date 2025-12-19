@@ -3,7 +3,6 @@ __pycache__/
 *.pyc
 *.pyo
 *.pyd
-
 # Virtual environment
 .venv/
 venv/
@@ -18,6 +17,8 @@ ENV/
 
 # Node / UI
 node_modules/
+ui/node_modules/
+ui/dist/
 dist/
 build/
 
